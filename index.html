@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Programme reprise course – Arnaud Girondin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1EC; --surface:#FFFFFF; --ink:#141210; --muted:#6B625A;
+  --accent:#E8580C; --accent-ink:#FFFFFF; --soft:#D8D1C6; --line:#E3DCD2; --hi:#E8580C;
+  --ok:#2E7D4F; --warn:#B9890C; --bad:#C6401C;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C0B0A; --surface:#1A1715; --ink:#F2EEE8; --muted:#A79C8F;
+    --accent:#FF6A1A; --accent-ink:#140800; --soft:#3A332C; --line:#2E2822; --hi:#FF6A1A;
+    --ok:#4FB579; --warn:#E0AC2E; --bad:#F06545;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C0B0A; --surface:#1A1715; --ink:#F2EEE8; --muted:#A79C8F;
+  --accent:#FF6A1A; --accent-ink:#140800; --soft:#3A332C; --line:#2E2822; --hi:#FF6A1A;
+  --ok:#4FB579; --warn:#E0AC2E; --bad:#F06545;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:32px 20px 72px}
+h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(1.9rem,5.5vw,3rem);line-height:1.05;margin:0 0 6px;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:0 0 28px;max-width:60ch}
+h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:1.3rem;margin:0 0 14px;letter-spacing:-.01em}
+
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px}
+.tab{flex:1 0 auto;min-width:56px;font:inherit;font-weight:600;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tab:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+
+.weekcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;margin-bottom:28px}
+.weektitle{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(1.3rem,4vw,1.8rem);margin:0 0 4px;letter-spacing:-.01em}
+.weeklabel{color:var(--accent);font-weight:600;font-size:.95rem;margin:0 0 18px}
+.objective{background:var(--soft);border-radius:12px;padding:12px 16px;font-size:.92rem;margin-bottom:22px}
+.objective b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px;font-weight:600}
+
+.sessions{display:grid;gap:16px}
+.session{border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px}
+.session .shead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.session .n{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:1.15rem;color:var(--accent)}
+.optional{display:inline-block;font-size:.72rem;font-weight:600;color:var(--warn);border:1px solid var(--warn);border-radius:20px;padding:1px 8px}
+.stats{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.85rem;margin:2px 0 12px}
+.stats b{color:var(--ink);font-weight:600}
+.formula{font-weight:600;margin:0 0 4px}
+
+.bar{display:flex;height:34px;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin:4px 0 6px}
+.bar span{display:block;height:100%}
+.bar .w{background:var(--soft)}
+.bar .r{background:var(--accent);border-right:2px solid var(--surface)}
+.legend{display:flex;gap:16px;font-size:.8rem;color:var(--muted);margin-bottom:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:380px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);font-size:.88rem}
+th{font-size:.75rem;font-weight:600;color:var(--muted)}
+td:first-child{font-weight:600}
+td.r{color:var(--accent);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+.note{color:var(--muted);font-size:.85rem;margin-top:8px}
+details{margin-top:4px}
+summary{cursor:pointer;font-size:.82rem;color:var(--accent);font-weight:600}
+
+.section{margin-bottom:28px}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:12px}
+.block b{display:block;margin-bottom:4px}
+.block p{margin:0;color:var(--muted)}
+
+.tablewrap2 table{min-width:480px}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:20px;padding:2px 10px;color:#fff}
+.tag.ok{background:var(--ok)}
+.tag.warn{background:var(--warn)}
+.tag.bad{background:var(--bad)}
+
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.92rem;color:var(--muted)}
+.flow span{background:var(--soft);color:var(--ink);border-radius:20px;padding:6px 12px;font-weight:600}
+.flow .arrow{color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Reprise de course</h1>
+  <p class="sub">Programme Arnaud Girondin – bloc progressif de 6 semaines. Objectif : allonger les fractions courues, réduire les pauses, introduire la course continue puis les variations d'allure avant le travail spécifique football.</p>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <section id="panel"></section>
+
+  <section class="section">
+    <h2>Consignes communes</h2>
+    <div class="block">
+      <b>Intensité</b>
+      <p>Les parties courues restent initialement faciles, autour de Z2 basse / RPE 2-3. L'objectif prioritaire est l'exposition mécanique répétée à la course, pas la performance cardio.</p>
+    </div>
+    <div class="block">
+      <b>Échauffement</b>
+      <p>5 à 10 min avant chaque séance : mobilité de cheville, 2 x 10 montées sur pointes, marche pointes/talons et quelques squats. Le renforcement tibial, mollet et membre inférieur reste réalisé en parallèle.</p>
+    </div>
+    <div class="block">
+      <b>Troisième séance</b>
+      <p>Elle reste conditionnelle. En cas de réaction tibiale retardée, de fatigue importante ou d'augmentation de la charge globale, c'est la séance à supprimer en premier.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Règles d'adaptation</h2>
+    <div class="weekcard" style="padding:0">
+      <div class="tablewrap tablewrap2">
+        <table>
+          <thead><tr><th>Situation</th><th>Adaptation</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag ok">OK</span> Aucun symptôme ou gêne minime stable</td><td>Poursuivre la progression prévue.</td></tr>
+            <tr><td><span class="tag ok">OK</span> Gêne ≤ 3/10 qui disparaît rapidement</td><td>Séance acceptable ; contrôler la réaction dans les heures suivantes et le lendemain.</td></tr>
+            <tr><td><span class="tag warn">Vigilance</span> Douleur clairement supérieure le lendemain</td><td>Répéter la semaine ou réduire le volume d'environ 20 à 30 %.</td></tr>
+            <tr><td><span class="tag bad">Stop</span> Douleur croissante pendant la course</td><td>Arrêter le bloc de course ; remplacer si besoin par un cardio sans impact.</td></tr>
+            <tr><td><span class="tag warn">Vigilance</span> Fatigue générale importante</td><td>Supprimer en priorité la 3ᵉ exposition de course.</td></tr>
+            <tr><td><span class="tag bad">Stop</span> Douleur inhabituelle, très focale ou évolution défavorable</td><td>Suspendre l'intensité et réévaluer cliniquement.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Progression recherchée</h2>
+    <div class="flow">
+      <span>Course / marche</span><span class="arrow">→</span>
+      <span>Fractions plus longues</span><span class="arrow">→</span>
+      <span>Réduction des pauses</span><span class="arrow">→</span>
+      <span>1ʳᵉ course continue</span><span class="arrow">→</span>
+      <span>Consolidation du continu</span><span class="arrow">→</span>
+      <span>Variations d'allure</span><span class="arrow">→</span>
+      <span>Travail spécifique football</span>
+    </div>
+    <p class="sub" style="margin-top:14px">Point clé : la progression n'est pas automatique d'une semaine à l'autre. La réponse tibiale pendant la séance, dans les heures suivantes et à J+1 reste le principal critère d'adaptation.</p>
+  </section>
+</main>
+
+<script>
+const fmt=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+const dur=s=>{const m=Math.floor(s/60),r=s%60;return r?`${m} min ${String(r).padStart(2,"0")}`:`${m} min`};
+
+const WEEKS=[
+ {n:1, label:"Reprise charge", objective:"Augmenter progressivement les fractions courues.", sessions:[
+   {kind:'interval', cycles:4, run:360, walk:120},
+   {kind:'interval', cycles:5, run:300, walk:120},
+   {kind:'interval', cycles:3, run:480, walk:120, optional:true}
+ ]},
+ {n:2, label:"Progression", objective:"Allonger les blocs, toujours sans course continue.", sessions:[
+   {kind:'interval', cycles:3, run:480, walk:120},
+   {kind:'interval', cycles:3, run:600, walk:120},
+   {kind:'interval', cycles:2, run:720, walk:120, optional:true}
+ ]},
+ {n:3, label:"Progression", objective:"Première exposition prudente à la course continue.", sessions:[
+   {kind:'interval', cycles:2, run:720, walk:120},
+   {kind:'interval', cycles:2, run:900, walk:120},
+   {kind:'segments', parts:[{type:'r',sec:1200},{type:'w',sec:300},{type:'r',sec:480}], optional:true}
+ ]},
+ {n:4, label:"Décharge", objective:"Réduire la charge et vérifier la tolérance.", sessions:[
+   {kind:'interval', cycles:3, run:480, walk:120},
+   {kind:'continuous', min:1200},
+   {kind:'interval', cycles:2, run:720, walk:120, optional:true}
+ ]},
+ {n:5, label:"Consolidation", objective:"Installer progressivement la course continue.", sessions:[
+   {kind:'continuous', min:1500},
+   {kind:'tail', base:1200, free:true, reps:4, repSec:20, repLabel:"progressifs"},
+   {kind:'continuous', min:1800, optional:true}
+ ]},
+ {n:6, label:"Préparation football", objective:"Réintroduire les variations d'allure avant le travail spécifique football.", sessions:[
+   {kind:'continuous', min:1800, max:2100},
+   {kind:'tail', base:1500, free:true, reps:6, repSec:20, repLabel:"progressifs"},
+   {kind:'tail', base:1800, cycles:6, run:30, walk:60, optional:true}
+ ]}
+];
+
+function barHTML(parts){
+  return '<div class="bar">'+parts.map(p=>`<span class="${p.cls}" style="flex:${p.sec}"></span>`).join('')+'</div>';
+}
+
+function renderInterval(s){
+  const cyc=s.run+s.walk, total=cyc*s.cycles;
+  let bar=[],rows="";
+  for(let i=0;i<s.cycles;i++){
+    bar.push({cls:'w',sec:s.walk},{cls:'r',sec:s.run});
+    const start=i*cyc;
+    rows+=`<tr><td>Cycle ${i+1}</td><td>${fmt(start)} – ${fmt(start+s.walk)}</td><td class="r">${fmt(start+s.walk)} – ${fmt(start+cyc)}</td></tr>`;
+  }
+  return `
+    <p class="formula">${s.cycles} × (${dur(s.walk)} marche / ${dur(s.run)} course)</p>
+    <div class="stats"><span>Durée totale <b>${fmt(total)}</b></span><span>Temps de course <b>${dur(s.run*s.cycles)}</b></span></div>
+    ${barHTML(bar)}
+    <div class="legend"><span><i style="background:var(--soft)"></i>Marche</span><span><i style="background:var(--accent)"></i>Course</span></div>
+    <details><summary>Voir le détail cycle par cycle</summary>
+      <div class="tablewrap"><table><thead><tr><th>Cycle</th><th>Marche</th><th>Course</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </details>`;
+}
+
+function renderContinuous(s){
+  const label = s.max ? `${dur(s.min)} à ${dur(s.max)} continu facile` : `${dur(s.min)} continu facile`;
+  return `
+    <p class="formula">${label}</p>
+    <div class="stats"><span>Course continue, sans pause</span></div>
+    ${barHTML([{cls:'r',sec:1}])}`;
+}
+
+function renderSegments(s){
+  const total=s.parts.reduce((a,p)=>a+p.sec,0);
+  let bar=s.parts.map(p=>({cls:p.type==='r'?'r':'w',sec:p.sec}));
+  let t=0,rows="";
+  s.parts.forEach((p)=>{
+    rows+=`<tr><td>${p.type==='r'?'Course':'Marche'}</td><td class="${p.type==='r'?'r':''}">${fmt(t)} – ${fmt(t+p.sec)}</td><td>${dur(p.sec)}</td></tr>`;
+    t+=p.sec;
+  });
+  const runTotal=s.parts.filter(p=>p.type==='r').reduce((a,p)=>a+p.sec,0);
+  return `
+    <p class="formula">${s.parts.map(p=>(p.type==='r'?'Course':'Marche')+' '+dur(p.sec)).join(' + ')}</p>
+    <div class="stats"><span>Durée totale <b>${fmt(total)}</b></span><span>Temps de course <b>${dur(runTotal)}</b></span></div>
+    ${barHTML(bar)}
+    <div class="legend"><span><i style="background:var(--accent)"></i>Course</span><span><i style="background:var(--soft)"></i>Marche</span></div>
+    <div class="tablewrap"><table><thead><tr><th>Bloc</th><th>Plage</th><th>Durée</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function renderTail(s){
+  if(s.free){
+    return `
+      <p class="formula">${dur(s.base)} continu + ${s.reps} × ${s.repSec} s ${s.repLabel}</p>
+      <div class="stats"><span>Base continue <b>${dur(s.base)}</b></span></div>
+      ${barHTML([{cls:'r',sec:1}])}
+      <p class="note">Puis ${s.reps} répétitions de ${s.repSec} secondes ${s.repLabel} (temps de récupération entre les répétitions non précisé par le programme — à faire au ressenti).</p>`;
+  }
+  const cyc=s.run+s.walk, tailTotal=cyc*s.cycles, total=s.base+tailTotal;
+  let bar=[{cls:'r',sec:s.base}],rows="";
+  let t=s.base;
+  for(let i=0;i<s.cycles;i++){
+    bar.push({cls:'w',sec:s.walk},{cls:'r',sec:s.run});
+    rows+=`<tr><td>Rép. ${i+1}</td><td>${fmt(t)} – ${fmt(t+s.walk)}</td><td class="r">${fmt(t+s.walk)} – ${fmt(t+cyc)}</td></tr>`;
+    t+=cyc;
+  }
+  const runTotal=s.base+s.run*s.cycles, walkTotal=s.walk*s.cycles;
+  return `
+    <p class="formula">${dur(s.base)} facile + ${s.cycles} × (${dur(s.walk)} facile / ${s.run} s dynamique)</p>
+    <div class="stats"><span>Durée totale <b>${fmt(total)}</b></span><span>Course <b>${dur(runTotal)}</b></span><span>Récup. facile <b>${dur(walkTotal)}</b></span></div>
+    ${barHTML(bar)}
+    <div class="legend"><span><i style="background:var(--soft)"></i>Récupération</span><span><i style="background:var(--accent)"></i>Course</span></div>
+    <details><summary>Voir le détail des répétitions</summary>
+      <p class="note">Base continue : 0:00 – ${fmt(s.base)}</p>
+      <div class="tablewrap"><table><thead><tr><th>Répétition</th><th>Facile (1')</th><th>Dynamique (30s)</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </details>`;
+}
+
+function renderSession(s){
+  if(s.kind==='interval') return renderInterval(s);
+  if(s.kind==='continuous') return renderContinuous(s);
+  if(s.kind==='segments') return renderSegments(s);
+  if(s.kind==='tail') return renderTail(s);
+  return "";
+}
+
+const tabs=document.getElementById("tabs");
+const panel=document.getElementById("panel");
+
+function show(n){
+  const w=WEEKS.find(x=>x.n===n);
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.n==n));
+  let sessions="";
+  w.sessions.forEach((s,i)=>{
+    sessions+=`<div class="session">
+      <div class="shead"><span class="n">Séance ${i+1}</span>${s.optional?'<span class="optional">conditionnelle</span>':''}</div>
+      ${renderSession(s)}
+    </div>`;
+  });
+  panel.innerHTML=`
+    <div class="weekcard">
+      <p class="weeklabel">Semaine ${w.n}</p>
+      <p class="weektitle">${w.label}</p>
+      <div class="objective"><b>Objectif</b>${w.objective}</div>
+      <div class="sessions">${sessions}</div>
+    </div>`;
+}
+WEEKS.forEach(w=>{
+  const b=document.createElement("button");
+  b.className="tab";b.role="tab";b.dataset.n=w.n;b.textContent="S"+w.n;
+  b.onclick=()=>show(w.n);tabs.appendChild(b);
+});
+show(1);
+</script>
+</body>
+</html>
